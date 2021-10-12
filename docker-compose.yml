@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+
+  # dev_suggest:
+  #   image: maven:3.6.2-jdk-8
+  #   command: sleep inf
+  #   volumes:
+  #     - m2repoSuggest:/root/.m2/repository
+  #     - .:/tn
+  #     - ssh:/root/ssh
+  #     - /var/run/docker.sock:/var/run/docker.sock
+
+  
+  my_gitlab:
+    image: gitlab/gitlab-ce
+    ports:
+      - "80:80"
+      - "22:22"
+    restart: always
+    
+    volumes:
+      - 'gitlab_config:/etc/gitlab'
+      - 'gitlab_logs:/var/log/gitlab'
+      - 'gitlab_data:/var/opt/gitlab'
+
+
+
+
+  jenkins:
+    image: jenkins/jenkins:lts-jdk8
+    ports:
+      - "8080:8080"
+    volumes:
+      - "jenkins_home:/var/jenkins_home"
+      - /var/run/docker.sock:/var/run/docker.sock
+
+
+
+  artifactory:
+        image: docker.bintray.io/jfrog/artifactory-oss:6.16.0
+        ports:
+          - "8081:8081"
+        volumes:
+        - "art-data:/var/opt/jfrog/artifactory"
+
+
+
+
+volumes:
+  m2repoSuggest:
+  gitlab_config:
+  gitlab_logs:
+  gitlab_data:
+  jenkins_home:
+  art-data:
+  ssh:
